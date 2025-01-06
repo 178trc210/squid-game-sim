@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squid Game - Телефонен Разговор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Squid Game - Телефонен Разговор</h1>
+    <p>Въведете 8-цифрения номер от визитката:</p>
+    <input type="text" id="phoneNumber" maxlength="8" placeholder="Вашият номер">
+    <br>
+    <button onclick="startCall()">Набери</button>
+
+    <div id="conversation" class="hidden">
+        <p id="message">Свързване...</p>
+    </div>
+
+    <script>
+        function startCall() {
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const validNumber = "12345678"; // Тук е вашият 8-цифрен номер
+
+            if (phoneNumber === validNumber) {
+                document.getElementById("conversation").classList.remove("hidden");
+                playConversation();
+            } else {
+                alert("Невалиден номер. Опитайте отново.");
+            }
+        }
+
+        function playConversation() {
+            const messages = [
+                "Поздравления, вие сте избран за участие. Искате ли да продължите?",
+                "Потвърждавате ли, че разбирате риска?",
+                "Готови ли сте да спазвате правилата на играта?",
+                "До скоро. Успех."
+            ];
+
+            let index = 0;
+            const messageElement = document.getElementById("message");
+
+            function speakMessage() {
+                if (index < messages.length) {
+                    const utterance = new SpeechSynthesisUtterance(messages[index]);
+                    utterance.lang = "bg-BG"; // Български език
+                    speechSynthesis.speak(utterance);
+
+                    messageElement.textContent = messages[index];
+                    index++;
+
+                    utterance.onend = () => {
+                        setTimeout(speakMessage, 2000); // Изчакване преди следващото съобщение
+                    };
+                } else {
+                    messageElement.textContent = "Разговорът приключи.";
+                }
+            }
+
+            speakMessage();
+        }
+    </script>
+</body>
+</html>
